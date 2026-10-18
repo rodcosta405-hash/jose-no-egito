@@ -9,7 +9,9 @@ export interface Identidade {
   numero: number
 }
 
-const cores = ['#b03a2e', '#1f5f99', '#1e7d45', '#9a6a00']
+// Validadas com o validador da skill dataviz (todos os pares, inclusive daltonismo). Amarelo e magenta têm
+// pouco contraste com o fundo, por isso toda cor vem com número, padrão e rótulo de texto.
+const cores = ['#2a78d6', '#eda100', '#008300', '#e87ba4']
 const padroes: Identidade['padrao'][] = ['liso', 'listras', 'pontos', 'xadrez']
 const nomesPadrao: Record<Identidade['padrao'], string> = { liso: 'liso', listras: 'listras', pontos: 'pontos', xadrez: 'xadrez' }
 

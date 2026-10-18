@@ -16,6 +16,7 @@ import type { Action, BuildingType, Coord, GameState, TipoAcaoDoAno } from '../e
 import { identidade, nomeEdificio, umaCasa } from './apresentacao'
 import { DialogoComerciar, DialogoConstruir, DialogoEntregar, DialogoReservar } from './Dialogos'
 import { Cabecalho, Historico, Marca, OutrosJogadores, PainelJogador } from './Paineis'
+import { BotoesExportar } from './Exportar'
 import { DialogoResumoAno, FimDeJogo } from './Resultados'
 import { nomesDaVelocidade, podeDesfazer, resumoPendente, type Velocidade } from './sessao'
 import { Tabuleiro } from './Tabuleiro'
@@ -86,7 +87,12 @@ export function Mesa({ jogo }: { jogo: Jogo }) {
     return new Set(casasValidasEvolucao(e, vez))
   }, [e, vez, humano, montando, alocando, modo, resumo])
 
-  if (e.fase === 'fim' && !resumo) return <FimDeJogo estado={e} aoNovaPartida={jogo.encerrar} />
+  if (e.fase === 'fim' && !resumo)
+    return (
+      <main>
+        <FimDeJogo estado={e} tempos={s.tempos} aoNovaPartida={jogo.encerrar} />
+      </main>
+    )
 
   const executar = (acao: Action): string | undefined => {
     const erro = jogo.agir(vez, acao)
@@ -242,6 +248,9 @@ export function Mesa({ jogo }: { jogo: Jogo }) {
           <PainelJogador estado={e} jogador={vez} />
           <OutrosJogadores estado={e} exceto={vez} />
           <Historico estado={e} />
+          <div className="botoes">
+            <BotoesExportar estado={e} tempos={s.tempos} />
+          </div>
         </aside>
       </div>
 

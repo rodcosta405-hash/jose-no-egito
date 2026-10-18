@@ -31,9 +31,17 @@ export function useJogo() {
   // Recarregar a página continua a partida salva.
   const [sessao, setSessao] = useState<Sessao | null>(() => (armazenamento ? carregar(armazenamento) : null))
 
-  // Salva a cada mudança.
+  // Salva a cada mudança e também ao esconder ou fechar a página (o cronômetro do ano fica certo).
   useEffect(() => {
-    if (sessao && armazenamento) salvar(sessao, armazenamento)
+    if (!sessao || !armazenamento) return
+    salvar(sessao, armazenamento)
+    const aoSair = () => salvar(sessao, armazenamento)
+    document.addEventListener('visibilitychange', aoSair)
+    window.addEventListener('pagehide', aoSair)
+    return () => {
+      document.removeEventListener('visibilitychange', aoSair)
+      window.removeEventListener('pagehide', aoSair)
+    }
   }, [sessao])
 
   // Bots jogam sozinhos, um passo por vez, no ritmo escolhido.

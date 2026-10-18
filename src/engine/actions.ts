@@ -22,6 +22,12 @@ import { aplicarAlocacao, motivoAlocacaoInvalida } from './year'
 type AcaoDe<T extends Action['tipo']> = Extract<Action, { tipo: T }>
 
 export function aplicar(estado: GameState, jogador: number, acao: Action, r: Regras = regrasPadrao): ResultadoAcao {
+  const res = aplicarSemRegistro(estado, jogador, acao, r)
+  if (!res.estado) return res
+  return { estado: { ...res.estado, acoes: [...estado.acoes, { jogador, acao }] } }
+}
+
+function aplicarSemRegistro(estado: GameState, jogador: number, acao: Action, r: Regras): ResultadoAcao {
   if (acao.tipo === 'montar') {
     if (estado.fase !== 'montagem') return { erro: 'A montagem já terminou' }
     return montar(estado, jogador, acao, r)

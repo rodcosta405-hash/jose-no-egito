@@ -13,7 +13,17 @@ interface Vaga {
 
 const nomePadrao = (i: number, tipo: TipoJogador) => (tipo === 'humano' ? `Jogador ${i + 1}` : `Bot ${i + 1}`)
 
-export function NovaPartida({ aoComecar, salvaExiste, aoContinuar }: { aoComecar: (e: GameState) => void; salvaExiste: boolean; aoContinuar: () => void }) {
+export function NovaPartida({
+  aoComecar,
+  salvaExiste,
+  aoContinuar,
+  aoReproduzir,
+}: {
+  aoComecar: (e: GameState) => void
+  salvaExiste: boolean
+  aoContinuar: () => void
+  aoReproduzir: () => void
+}) {
   const [n, setN] = useState(regras.jogadores.maximo)
   const [vagas, setVagas] = useState<Vaga[]>(
     Array.from({ length: regras.jogadores.maximo }, (_, i) => ({
@@ -133,6 +143,9 @@ export function NovaPartida({ aoComecar, salvaExiste, aoContinuar }: { aoComecar
           </button>
           <button className="botao" onClick={() => setVerRegras(true)}>
             Regras rápidas
+          </button>
+          <button className="botao" onClick={aoReproduzir}>
+            Reproduzir partida (JSON)
           </button>
         </div>
       </section>

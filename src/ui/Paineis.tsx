@@ -116,10 +116,10 @@ export function PainelJogador({ estado, jogador }: { estado: GameState; jogador:
   )
 }
 
-export function OutrosJogadores({ estado, exceto }: { estado: GameState; exceto: number }) {
+export function OutrosJogadores({ estado, exceto, titulo = 'Outros jogadores' }: { estado: GameState; exceto: number; titulo?: string }) {
   return (
-    <section className="outros" aria-label="Outros jogadores">
-      <h2>Outros jogadores</h2>
+    <section className="outros" aria-label={titulo}>
+      <h2>{titulo}</h2>
       <ul>
         {estado.jogadores
           .filter((p) => p.id !== exceto)

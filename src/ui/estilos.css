@@ -574,3 +574,91 @@ tr.vencedor td {
     width: 24px;
   }
 }
+
+/* ---------- gráfico de pontos ---------- */
+.grafico {
+  margin: 16px 0;
+  padding: 12px;
+  background: #fcfcfb;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+}
+.grafico figcaption {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.legenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 6px;
+  font-size: 0.9rem;
+}
+.legenda li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.grafico-area {
+  position: relative;
+}
+.grafico-area > svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.g-eixo {
+  font-size: 11px;
+  fill: #52514e;
+}
+.g-rotulo {
+  font-size: 12px;
+  font-weight: 600;
+  fill: #0b0b0b;
+}
+.g-dica {
+  position: absolute;
+  top: 8px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 10px;
+  background: #fff;
+  border: 1px solid #b9b5a8;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-size: 0.85rem;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.grafico details {
+  margin-top: 8px;
+}
+.grafico summary {
+  cursor: pointer;
+  min-height: 32px;
+}
+
+/* ---------- reprodução ---------- */
+.controles-reproducao {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+}
+.controles-reproducao input[type='range'] {
+  flex: 1 1 200px;
+}
+.novidades {
+  list-style: none;
+  padding: 8px 12px;
+  margin: 0 0 10px;
+  background: #fff3cd;
+  border: 1px solid #e0b84a;
+  border-radius: 6px;
+  min-height: 2.6em;
+}

@@ -82,9 +82,16 @@ export function novaPartida(config: ConfigPartida, r: Regras = regrasPadrao): Re
     montagem: { volta: 1, indice: 0, passo: 0 },
     resumos: [],
     classificacao: null,
+    config: copiarJson(config),
+    acoes: [],
     log: [{ ano: 0, jogador: null, texto: `Ordem de jogo: ${ordem.map((i) => jogadores[i]?.nome).join(', ')}` }],
   }
   return { estado }
+}
+
+/** Cópia profunda de dados JSON (o motor não usa APIs do navegador). */
+function copiarJson<T>(x: T): T {
+  return JSON.parse(JSON.stringify(x)) as T
 }
 
 /** Quem monta agora e qual edifício; null quando a montagem terminou. */

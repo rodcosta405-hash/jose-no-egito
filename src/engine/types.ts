@@ -106,6 +106,15 @@ export interface GameState {
   resumos: ResumoAno[]
   classificacao: Classificado[] | null
   log: LogEntry[]
+  /** Configuração usada em novaPartida (para exportar e reproduzir). */
+  config: ConfigPartida
+  /** Todas as ações aceitas, em ordem: semente + config + ações reproduzem a partida. */
+  acoes: AcaoRegistrada[]
+}
+
+export interface AcaoRegistrada {
+  jogador: number
+  acao: Action
 }
 
 export interface ConfigJogador {

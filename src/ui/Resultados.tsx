@@ -1,7 +1,10 @@
 import { pontuacao, regras } from '../engine'
 import type { CriterioDesempate, GameState, ResumoAno } from '../engine'
 import { Dialogo } from './Dialogos'
+import { BotoesExportar } from './Exportar'
+import { GraficoPontos } from './Grafico'
 import { Marca } from './Paineis'
+import type { Tempos } from './registro'
 
 export function DialogoResumoAno({ estado, resumo, aoContinuar }: { estado: GameState; resumo: ResumoAno; aoContinuar: () => void }) {
   const comecaFome = resumo.ano === regras.anos.gordos
@@ -69,11 +72,23 @@ const textoCriterio: Record<CriterioDesempate, string> = {
   empate: 'empate em todos os critérios',
 }
 
-export function FimDeJogo({ estado, aoNovaPartida }: { estado: GameState; aoNovaPartida: () => void }) {
+export function FimDeJogo({
+  estado,
+  tempos,
+  aoNovaPartida,
+  titulo = 'Fim de jogo',
+  comJson = true,
+}: {
+  estado: GameState
+  tempos: Tempos
+  aoNovaPartida?: () => void
+  titulo?: string
+  comJson?: boolean
+}) {
   const lista = estado.classificacao ?? []
   return (
-    <main className="fim">
-      <h1>Fim de jogo</h1>
+    <section className="fim">
+      <h1>{titulo}</h1>
       <div className="tabela-rolavel">
         <table>
           <thead>
@@ -114,9 +129,15 @@ export function FimDeJogo({ estado, aoNovaPartida }: { estado: GameState; aoNova
           </tbody>
         </table>
       </div>
-      <button className="botao primario" onClick={aoNovaPartida}>
-        Nova partida
-      </button>
-    </main>
+      <GraficoPontos estado={estado} tempos={tempos} />
+      <div className="botoes">
+        {aoNovaPartida && (
+          <button className="botao primario" onClick={aoNovaPartida}>
+            Nova partida
+          </button>
+        )}
+        <BotoesExportar estado={estado} tempos={tempos} comJson={comJson} />
+      </div>
+    </section>
   )
 }
