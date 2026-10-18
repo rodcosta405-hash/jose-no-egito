@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc -p tsconfig.engine.json && tsc -p tsconfig.json && vite build",
     "test": "vitest run",
+    "preview": "vite preview",
     "sim": "tsx scripts/sim.ts"
   },
   "dependencies": {

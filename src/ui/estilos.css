@@ -694,11 +694,12 @@ tr.vencedor td {
 }
 .campo-designer {
   display: grid;
-  grid-template-columns: 1fr 96px;
+  grid-template-columns: minmax(0, 1fr) 96px;
   align-items: center;
   gap: 2px 8px;
   margin: 4px 0;
   font-size: 0.92rem;
+  overflow-wrap: anywhere;
 }
 .campo-designer input:not([type='checkbox']) {
   width: 100%;
