@@ -167,6 +167,21 @@ describe('comerciar com outro jogador', () => {
     expect(erro(vizinhos(), 0, { tipo: 'comerciar', com: 1, recurso: 'cereal', direcao: 'comprar', quantidade: 7 })).toBe('Beto tem só 6 cereal')
     expect(erro(vizinhos(), 0, { tipo: 'comerciar', com: 1, recurso: 'cereal', direcao: 'vender', quantidade: 1 })).toBe('Beto não tem 5 ouros')
   })
+
+  it('valida também o lado de quem joga: recurso para vender e ouro para comprar', () => {
+    const pobre = cenario({
+      edificios1: { H1: 'prefeitura', G1: 'residencia', B5: 'campo' },
+      j0: { ouro: 4, pedra: 1 },
+      j1: { cereal: 6, ouro: 20 },
+      extra: { preco: 5 },
+    })
+    expect(erro(pobre, 0, { tipo: 'comerciar', com: 1, recurso: 'cereal', direcao: 'comprar', quantidade: 1 })).toBe(
+      'Ouro insuficiente: custa 5 ouros',
+    )
+    expect(erro(pobre, 0, { tipo: 'comerciar', com: 1, recurso: 'pedra', direcao: 'vender', quantidade: 2 })).toBe('Você tem só 1 pedra')
+    expect(erro(pobre, 0, { tipo: 'comerciar', com: 1, recurso: 'cereal', direcao: 'vender', quantidade: 3 })).toBe('Você tem só 2 cereal')
+    expect(erro(pobre, 0, { tipo: 'comerciar', com: 1, recurso: 'pedra', direcao: 'comprar', quantidade: 3 })).toBe('Beto tem só 2 pedra')
+  })
 })
 
 describe('reservar e demarcar', () => {

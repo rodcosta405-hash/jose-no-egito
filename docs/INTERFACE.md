@@ -33,6 +33,7 @@ Objetivo: um protótipo jogável e legível para playtest, não a arte final. Tu
 - Revela a carta com destaque.
 - Tabela por jogador: produção, alimentados, sem comida, pontos do ano, cereal descartado.
 - Na virada do ano 7 para o 8: aviso claro de que a fome começou.
+- O motor já abre o ano seguinte; a interface mostra o resumo (`estado.resumos`) e só libera a próxima volta de ações depois de uma confirmação ("Continuar").
 
 ### 6. Fim de jogo
 - Classificação com placar por fonte (alimentação, fome, contratos, PV impressos, sobras) e critério de desempate usado.

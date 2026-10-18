@@ -13,6 +13,7 @@ import {
   pvImpressos,
   regras,
   trabalhadores,
+  validarRegras,
 } from '../src/engine'
 import type { Action, GameState } from '../src/engine'
 import { resolverAno } from '../src/engine/year'
@@ -63,6 +64,31 @@ describe('resolução do ano', () => {
     expect(p.placar.alimentacao).toBe(4)
     expect(p.placar.fome).toBe(-4)
     expect(resumoDe(e, 0)).toMatchObject({ alimentados: 4, semComida: 2, pontosAno: 0 })
+  })
+
+  it('com consumo 2, alimentados = ⌊cereal ÷ 2⌋ e o cereal gasto é alimentados × 2', () => {
+    const r2 = validarRegras({ ...structuredClone(regras), populacao: { ...regras.populacao, consumoPorTrabalhador: 2 } })
+    // 4 trabalhadores, 7 cereais: 3 alimentados, gastam 6, sobra 1.
+    const e = resolverAno(naAlocacao({ edificios0: { C4: 'prefeitura', B4: 'residencia', B5: 'residencia' }, j0: { cereal: 7 } }), r2)
+    expect(resumoDe(e, 0)).toMatchObject({ trabalhadores: 4, alimentados: 3, semComida: 1 })
+    expect(jogador(e, 0).cereal).toBe(1)
+  })
+
+  it('o resumo do ano traz carta e, por jogador, produção, alimentados, sem comida, pontos e descarte', () => {
+    const e = resolverAno(naAlocacao({ j0: { cereal: 9 } }, ['C3']))
+    const resumo = e.resumos[0]!
+    expect(resumo.carta).toBe(e.baralho[0])
+    expect(resumo.jogadores).toHaveLength(2)
+    expect(resumoDe(e, 0)).toEqual({
+      jogador: 0,
+      producao: { ouro: 4, pedra: 0, cereal: 0 },
+      trabalhadores: 2,
+      alimentados: 2,
+      semComida: 0,
+      pontosAno: 2,
+      descartado: 2,
+      totalAcumulado: 2,
+    })
   })
 
   it('cereal acima da capacidade é descartado depois da alimentação', () => {
