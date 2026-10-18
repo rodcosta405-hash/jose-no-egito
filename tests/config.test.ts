@@ -56,6 +56,18 @@ describe('config/regras.json', () => {
     expect(() => validarRegras(r)).toThrow('"cartas.magras" tem 2 cartas')
   })
 
+  it('recusa casa que é várzea e rocha ao mesmo tempo', () => {
+    const r = copia()
+    r.mapa.rochas.push('C5')
+    expect(() => validarRegras(r)).toThrow('casa "C5" aparece em "mapa.varzea" e em "mapa.rochas"')
+  })
+
+  it('recusa montagem que não bate com os edifícios iniciais', () => {
+    const r = copia()
+    r.montagem.segundaVolta = ['campo']
+    expect(() => validarRegras(r)).toThrow('devem ter exatamente os edifícios de "inicial.edificios"')
+  })
+
   it('recusa recurso desconhecido em custo', () => {
     const r = copia()
     r.edificios.campo.custo = { ouro: 2, madeira: 1 }

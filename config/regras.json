@@ -1,6 +1,7 @@
 {
   "versao": "dossie-v2-mapa-s",
   "anos": { "total": 14, "gordos": 7 },
+  "jogadores": { "minimo": 2, "maximo": 4 },
   "acoesPorAno": 2,
   "mapa": {
     "colunas": 8,
@@ -20,6 +21,10 @@
     "pedra": 2,
     "cereal": 2,
     "edificios": ["prefeitura", "residencia", "mercado", "campo", "pedreira"]
+  },
+  "montagem": {
+    "primeiraVolta": ["prefeitura", "residencia", "mercado"],
+    "segundaVolta": ["campo", "pedreira"]
   },
   "edificios": {
     "prefeitura": { "nome": "Prefeitura", "capacidadeCereal": 5, "pv": 0, "construivel": false },

@@ -3,6 +3,8 @@
 import regrasBrutas from '../../config/regras.json'
 
 export type Recurso = 'ouro' | 'pedra' | 'cereal'
+export type BuildingType = 'prefeitura' | 'residencia' | 'mercado' | 'campo' | 'pedreira' | 'armazem'
+export const tiposDeEdificio: readonly BuildingType[] = ['prefeitura', 'residencia', 'mercado', 'campo', 'pedreira', 'armazem']
 export type Custo = Partial<Record<Recurso, number>>
 
 export interface Verso {
@@ -22,6 +24,7 @@ export interface EdificioBase {
 export interface Regras {
   versao: string
   anos: { total: number; gordos: number }
+  jogadores: { minimo: number; maximo: number }
   acoesPorAno: number
   mapa: {
     colunas: number
@@ -33,7 +36,8 @@ export interface Regras {
     margens: { oeste: { sementeFloodFill: string }; leste: { sementeFloodFill: string } }
     jogadoresPorMargem: number
   }
-  inicial: { ouro: number; pedra: number; cereal: number; edificios: string[] }
+  inicial: { ouro: number; pedra: number; cereal: number; edificios: BuildingType[] }
+  montagem: { primeiraVolta: BuildingType[]; segundaVolta: BuildingType[] }
   edificios: {
     prefeitura: EdificioBase & { capacidadeCereal: number; construivel: boolean }
     residencia: EdificioBase & {
@@ -190,6 +194,11 @@ export function validarRegras(dado: unknown): Regras {
 
   v.campo('versao', 'texto')
   v.inteiros('anos', 'total', 'gordos')
+  const minJog = v.campo('jogadores.minimo', 'inteiro') as number | undefined
+  const maxJog = v.campo('jogadores.maximo', 'inteiro') as number | undefined
+  if (minJog !== undefined && maxJog !== undefined && (minJog < 1 || minJog > maxJog)) {
+    v.falhar('"jogadores.minimo" deveria ser ≥ 1 e ≤ "jogadores.maximo"')
+  }
   v.campo('acoesPorAno', 'inteiro')
 
   const colunas = v.campo('mapa.colunas', 'inteiro') as number | undefined
@@ -215,8 +224,36 @@ export function validarRegras(dado: unknown): Regras {
     }
   }
 
+  const vistas = new Map<string, string>()
+  for (const [caminho, lista] of casas.slice(0, 3)) {
+    for (const c of lista ?? []) {
+      if (typeof c !== 'string') continue
+      const antes = vistas.get(c)
+      if (antes) v.falhar(`casa "${c}" aparece em "${antes}" e em "${caminho}"`)
+      else vistas.set(c, caminho)
+    }
+  }
+
   v.inteiros('inicial', 'ouro', 'pedra', 'cereal')
-  v.listaDe('inicial.edificios', 'texto')
+  const iniciais = v.listaDe('inicial.edificios', 'texto')
+  const volta1 = v.listaDe('montagem.primeiraVolta', 'texto')
+  const volta2 = v.listaDe('montagem.segundaVolta', 'texto')
+  const listasDeEdificios: [string, unknown[] | undefined][] = [
+    ['inicial.edificios', iniciais],
+    ['montagem.primeiraVolta', volta1],
+    ['montagem.segundaVolta', volta2],
+  ]
+  for (const [caminho, lista] of listasDeEdificios) {
+    for (const t of lista ?? []) {
+      if (typeof t === 'string' && !tiposDeEdificio.includes(t as BuildingType)) v.falhar(`"${caminho}": edifício desconhecido "${t}"`)
+    }
+  }
+  if (iniciais && volta1 && volta2) {
+    const a = iniciais.map(String).sort().join(',')
+    const b = [...volta1, ...volta2].map(String).sort().join(',')
+    if (a !== b) v.falhar('"montagem.primeiraVolta" + "montagem.segundaVolta" devem ter exatamente os edifícios de "inicial.edificios"')
+  }
+  if (volta1 && volta1.length > 0 && volta1[0] !== 'prefeitura') v.falhar('"montagem.primeiraVolta" deve começar pela Prefeitura')
 
   const e = 'edificios'
   for (const tipo of ['prefeitura', 'residencia', 'mercado', 'campo', 'pedreira', 'armazem']) {
