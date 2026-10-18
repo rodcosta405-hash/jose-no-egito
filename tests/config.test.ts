@@ -68,6 +68,12 @@ describe('config/regras.json', () => {
     expect(() => validarRegras(r)).toThrow('devem ter exatamente os edifícios de "inicial.edificios"')
   })
 
+  it('recusa critério de desempate desconhecido', () => {
+    const r = copia()
+    r.desempate = ['sorte']
+    expect(() => validarRegras(r)).toThrow('critério desconhecido "sorte"')
+  })
+
   it('recusa recurso desconhecido em custo', () => {
     const r = copia()
     r.edificios.campo.custo = { ouro: 2, madeira: 1 }

@@ -3,6 +3,7 @@ import { regras as regrasPadrao, type BuildingType, type Regras } from './config
 import { margensDoMapa, obterMapa, type Coord, type Margem } from './map'
 import { embaralhar, iniciarRng } from './rng'
 import type { ConfigPartida, GameState, PlayerState, ResultadoAcao } from './types'
+import { iniciarAno } from './year'
 
 const nomeDe = (tipo: BuildingType, r: Regras) => r.edificios[tipo].nome
 const nomeMargem: Record<Margem, string> = { oeste: 'oeste', leste: 'leste' }
@@ -79,6 +80,8 @@ export function novaPartida(config: ConfigPartida, r: Regras = regrasPadrao): Re
     baralho,
     cartasReveladas: [],
     montagem: { volta: 1, indice: 0, passo: 0 },
+    resumos: [],
+    classificacao: null,
     log: [{ ano: 0, jogador: null, texto: `Ordem de jogo: ${ordem.map((i) => jogadores[i]?.nome).join(', ')}` }],
   }
   return { estado }
@@ -171,18 +174,8 @@ export function montar(
       indice = 0
       if (volta === 1) volta = 2
       else {
-        return {
-          estado: {
-            ...estado,
-            tabuleiro,
-            log: [...log, { ano: 1, jogador: null, texto: 'Montagem concluída. Começa o ano 1.' }],
-            montagem: null,
-            fase: 'acoes',
-            ano: 1,
-            volta: 1,
-            vez: estado.primeiro,
-          },
-        }
+        const montado: GameState = { ...estado, tabuleiro, montagem: null, log: [...log, { ano: 0, jogador: null, texto: 'Montagem concluída.' }] }
+        return { estado: iniciarAno(montado, 1, r) }
       }
     }
   }

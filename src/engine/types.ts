@@ -53,6 +53,36 @@ export interface LogEntry {
   texto: string
 }
 
+export interface ResumoJogadorAno {
+  jogador: number
+  producao: { ouro: number; pedra: number; cereal: number }
+  trabalhadores: number
+  alimentados: number
+  semComida: number
+  /** Pontos de alimentação e fome deste ano. */
+  pontosAno: number
+  descartado: number
+  /** Soma do placar ao fim do ano (inclui contratos). */
+  totalAcumulado: number
+}
+
+export interface ResumoAno {
+  ano: number
+  carta: number
+  preco: number
+  jogadores: ResumoJogadorAno[]
+}
+
+export type CriterioDesempate = 'pontos' | 'trabalhadoresAlimentadosNoAno14' | 'cerealGuardado' | 'empate'
+
+export interface Classificado {
+  jogador: number
+  posicao: number
+  total: number
+  /** O que separou este jogador do seguinte (ou 'empate' se nada separou). */
+  criterio: CriterioDesempate
+}
+
 export interface GameState {
   semente: number
   rng: EstadoRng
@@ -61,7 +91,8 @@ export interface GameState {
   /** Ids dos jogadores na ordem de jogo sorteada. */
   ordem: number[]
   primeiro: number
-  volta: 1 | 2
+  /** Volta de ações dentro do ano (1..acoesPorAno). */
+  volta: number
   vez: number
   jogadores: PlayerState[]
   tabuleiro: Record<Coord, Tile>
@@ -72,6 +103,8 @@ export interface GameState {
   baralho: number[]
   cartasReveladas: number[]
   montagem: ProgressoMontagem | null
+  resumos: ResumoAno[]
+  classificacao: Classificado[] | null
   log: LogEntry[]
 }
 

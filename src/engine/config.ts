@@ -170,6 +170,8 @@ class Verificador {
 }
 
 const recursos: Recurso[] = ['ouro', 'pedra', 'cereal']
+/** Critérios que scoring.ts sabe calcular. */
+const criteriosConhecidos = ['trabalhadoresAlimentadosNoAno14', 'cerealGuardado']
 const nomeDoTipo: Record<Tipo, string> = {
   inteiro: 'um número inteiro',
   texto: 'um texto',
@@ -325,7 +327,11 @@ export function validarRegras(dado: unknown): Regras {
   v.inteiros('contratos', 'pontosPorCereal', 'demandaPorAnoMagro')
   v.inteiros('acoesAuxiliares', 'reservaMaxima', 'demarcacaoMaxima', 'custoDemarcacao')
   v.inteiros('fimDeJogo', 'ouroPorPonto', 'cerealPorPonto', 'pedraPorPonto')
-  v.listaDe('desempate', 'texto', false)
+  for (const k of v.listaDe('desempate', 'texto', false) ?? []) {
+    if (typeof k === 'string' && !criteriosConhecidos.includes(k)) {
+      v.falhar(`"desempate": critério desconhecido "${k}" (use ${criteriosConhecidos.join(' ou ')})`)
+    }
+  }
 
   const anos = (dado as Partial<Regras> | null)?.anos
   if (anos && Number.isInteger(anos.total) && Number.isInteger(anos.gordos) && anos.gordos > anos.total) {
