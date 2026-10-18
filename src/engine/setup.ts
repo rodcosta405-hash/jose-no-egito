@@ -83,6 +83,7 @@ export function novaPartida(config: ConfigPartida, r: Regras = regrasPadrao): Re
     resumos: [],
     classificacao: null,
     config: copiarJson(config),
+    regras: r,
     acoes: [],
     log: [{ ano: 0, jogador: null, texto: `Ordem de jogo: ${ordem.map((i) => jogadores[i]?.nome).join(', ')}` }],
   }
@@ -95,7 +96,7 @@ function copiarJson<T>(x: T): T {
 }
 
 /** Quem monta agora e qual edifício; null quando a montagem terminou. */
-export function proximaMontagem(estado: GameState, r: Regras = regrasPadrao): { jogador: number; edificio: BuildingType } | null {
+export function proximaMontagem(estado: GameState, r: Regras = estado.regras): { jogador: number; edificio: BuildingType } | null {
   const m = estado.montagem
   if (estado.fase !== 'montagem' || !m) return null
   const lista = m.volta === 1 ? r.montagem.primeiraVolta : r.montagem.segundaVolta
@@ -110,7 +111,7 @@ export function motivoCasaInvalidaMontagem(
   jogador: number,
   edificio: BuildingType,
   casa: Coord,
-  r: Regras = regrasPadrao,
+  r: Regras = estado.regras,
 ): string | null {
   const mapa = obterMapa(r)
   const motivo = motivoCasaLivre(estado, edificio, casa, r)
@@ -156,7 +157,7 @@ export function montar(
   estado: GameState,
   jogador: number,
   acao: { tipo: 'montar'; edificio: BuildingType; casa: Coord },
-  r: Regras = regrasPadrao,
+  r: Regras = estado.regras,
 ): ResultadoAcao {
   const prox = proximaMontagem(estado, r)
   if (!prox) return { erro: 'A montagem já terminou' }

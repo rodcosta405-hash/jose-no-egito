@@ -60,7 +60,13 @@ function somar(a: Agregado, pontos: number, placar: Placar, vitoria: number) {
  * Roda `partidas` partidas com a mesa dada. Vitória dividida entre os empatados em pontos
  * (como no simulador Python, para comparar com referenciaDeResultados).
  */
-export function simular(mesa: string[], partidas: number, semente0 = 1, r: Regras = regrasPadrao): ResultadoSimulacao {
+export function simular(
+  mesa: string[],
+  partidas: number,
+  semente0 = 1,
+  r: Regras = regrasPadrao,
+  aoProgresso?: (feitas: number) => void,
+): ResultadoSimulacao {
   const porEstrategia: Record<string, Agregado> = {}
   const porEstrategiaEMargem: Record<string, Record<Margem, Agregado>> = {}
   const porMargem: Record<Margem, Agregado> = { oeste: vazio(), leste: vazio() }
@@ -80,6 +86,7 @@ export function simular(mesa: string[], partidas: number, semente0 = 1, r: Regra
       total += pts[k]!
       n++
     })
+    aoProgresso?.(i + 1)
   }
   return { partidas, mesa, porEstrategia, porEstrategiaEMargem, porMargem, pontosMedios: total / n }
 }

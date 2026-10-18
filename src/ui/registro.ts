@@ -1,6 +1,6 @@
 // Registro de playtest por ano (tempo, carta, preço, pontos de cada jogador) e exportação em CSV.
 // Lógica pura, testável no Node.
-import { pontuacao, regras as regrasPadrao } from '../engine'
+import { pontuacao } from '../engine'
 import type { GameState, Regras } from '../engine'
 
 /** Milissegundos gastos em cada ano, medidos pela interface. */
@@ -16,7 +16,7 @@ export interface LinhaRegistro {
   pontos: { noAno: number; acumulado: number }[]
 }
 
-export function linhasRegistro(estado: GameState, tempos: Tempos, r: Regras = regrasPadrao): LinhaRegistro[] {
+export function linhasRegistro(estado: GameState, tempos: Tempos, r: Regras = estado.regras): LinhaRegistro[] {
   const linhas: LinhaRegistro[] = []
   let anteriores = estado.jogadores.map(() => 0)
   for (const resumo of estado.resumos) {
@@ -62,7 +62,7 @@ function campo(v: string | number | null): string {
  * CSV para planilha em português: separador ";", UTF-8 com BOM (acentos corretos no Excel),
  * colunas Ano; Fase; Carta; Preço; Tempo (min:s); e, por jogador, pontos no ano e acumulado.
  */
-export function gerarCsv(estado: GameState, tempos: Tempos, r: Regras = regrasPadrao): string {
+export function gerarCsv(estado: GameState, tempos: Tempos, r: Regras = estado.regras): string {
   const cabecalho = ['Ano', 'Fase', 'Carta', 'Preço', 'Tempo (min:s)']
   for (const p of estado.jogadores) cabecalho.push(`${p.nome} pontos no ano`, `${p.nome} acumulado`)
   const linhas = linhasRegistro(estado, tempos, r).map((l) => [

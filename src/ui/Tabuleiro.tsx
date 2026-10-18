@@ -14,7 +14,7 @@ interface Props {
 }
 
 export function Tabuleiro({ estado, destacadas, alocacaoEmEdicao, aoClicar }: Props) {
-  const mapa = obterMapa()
+  const mapa = obterMapa(estado.regras)
   const largura = mapa.colunas * L + M
   const altura = mapa.linhas * L + M
   const xy = (casa: Coord) => {

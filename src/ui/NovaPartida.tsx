@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { estrategias } from '../bots'
-import { margensDoMapa, novaPartida, regras } from '../engine'
-import type { ConfigJogador, GameState, Margem, TipoJogador } from '../engine'
+import { margensDoMapa, novaPartida, regras as regrasPadrao } from '../engine'
+import type { ConfigJogador, GameState, Margem, Regras, TipoJogador } from '../engine'
 import { RegrasRapidas } from './RegrasRapidas'
 
 interface Vaga {
@@ -18,11 +18,18 @@ export function NovaPartida({
   salvaExiste,
   aoContinuar,
   aoReproduzir,
+  aoDesigner,
+  regras = regrasPadrao,
+  aoUsarPadrao,
 }: {
   aoComecar: (e: GameState) => void
   salvaExiste: boolean
   aoContinuar: () => void
   aoReproduzir: () => void
+  aoDesigner: () => void
+  /** Regras da próxima partida (o modo designer pode trocar). */
+  regras?: Regras
+  aoUsarPadrao?: () => void
 }) {
   const [n, setN] = useState(regras.jogadores.maximo)
   const [vagas, setVagas] = useState<Vaga[]>(
@@ -38,7 +45,8 @@ export function NovaPartida({
   const [erro, setErro] = useState<string | null>(null)
   const [verRegras, setVerRegras] = useState(false)
 
-  if (verRegras) return <RegrasRapidas aoVoltar={() => setVerRegras(false)} />
+  if (verRegras) return <RegrasRapidas aoVoltar={() => setVerRegras(false)} r={regras} />
+  const modificadas = regras !== regrasPadrao
 
   const mudar = (i: number, parcial: Partial<Vaga>) =>
     setVagas((vs) =>
@@ -60,7 +68,7 @@ export function NovaPartida({
     }))
     const s = semente.trim() === '' ? Math.floor(Math.random() * 1_000_000) : Number(semente)
     if (!Number.isInteger(s)) return setErro('A semente deve ser um número inteiro')
-    const r = novaPartida({ jogadores, margens: margens === 'sorteio' ? 'sorteio' : usadas.map((v) => v.margem), semente: s })
+    const r = novaPartida({ jogadores, margens: margens === 'sorteio' ? 'sorteio' : usadas.map((v) => v.margem), semente: s }, regras)
     if (!r.estado) return setErro(r.erro)
     aoComecar(r.estado)
   }
@@ -78,6 +86,16 @@ export function NovaPartida({
 
       <section>
         <h2>Nova partida</h2>
+        {modificadas && (
+          <p className="aviso-regras">
+            Esta partida vai usar as <strong>regras modificadas</strong> no modo designer (versão "{regras.versao}").{' '}
+            {aoUsarPadrao && (
+              <button className="botao secundario" onClick={aoUsarPadrao}>
+                Usar as regras padrão
+              </button>
+            )}
+          </p>
+        )}
         <label className="campo">
           Número de jogadores{' '}
           <select value={n} onChange={(e) => setN(Number(e.target.value))}>
@@ -146,6 +164,9 @@ export function NovaPartida({
           </button>
           <button className="botao" onClick={aoReproduzir}>
             Reproduzir partida (JSON)
+          </button>
+          <button className="botao" onClick={aoDesigner}>
+            Modo designer
           </button>
         </div>
       </section>

@@ -1,7 +1,8 @@
-import { regras as r } from '../engine'
+import { regras as regrasPadrao } from '../engine'
+import type { Regras } from '../engine'
 import { textoCusto } from './apresentacao'
 
-export function RegrasRapidas({ aoVoltar }: { aoVoltar: () => void }) {
+export function RegrasRapidas({ aoVoltar, r = regrasPadrao }: { aoVoltar: () => void; r?: Regras }) {
   const e = r.edificios
   return (
     <main className="regras">

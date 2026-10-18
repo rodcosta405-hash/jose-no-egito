@@ -9,7 +9,6 @@ import {
   edificiosDe,
   obterMapa,
   precisaTrabalhador,
-  regras as regrasPadrao,
   trabalhadores,
 } from '../engine'
 import type { BuildingType, Coord, GameState, Mapa, PlayerState, Regras } from '../engine'
@@ -28,7 +27,7 @@ export interface Contexto {
   rand: () => number
 }
 
-export function criarContexto(estado: GameState, j: number, r: Regras = regrasPadrao): Contexto {
+export function criarContexto(estado: GameState, j: number, r: Regras = estado.regras): Contexto {
   const p = estado.jogadores[j]
   if (!p) throw new Error(`Jogador ${j} não existe`)
   return { estado, j, p, r, mapa: obterMapa(r), params: estrategiaPorId(p.estrategiaBot).params, rand: rngDoBot(estado, j) }

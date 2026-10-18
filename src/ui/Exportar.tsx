@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { exportarPartida, regras } from '../engine'
+import { exportarPartida } from '../engine'
 import type { GameState } from '../engine'
 import { gerarCsv, type Tempos } from './registro'
 
@@ -20,7 +20,7 @@ export function BotoesExportar({ estado, tempos, comJson = true }: { estado: Gam
   const [erro, setErro] = useState<string | null>(null)
   const json = () => {
     try {
-      const dados = { ...exportarPartida(estado, regras, { tempos }), exportadaEm: new Date().toISOString() }
+      const dados = { ...exportarPartida(estado, undefined, { tempos }), exportadaEm: new Date().toISOString() }
       baixarArquivo(`${prefixo(estado)}.json`, JSON.stringify(dados, null, 1), 'application/json')
       setErro(null)
     } catch (e) {

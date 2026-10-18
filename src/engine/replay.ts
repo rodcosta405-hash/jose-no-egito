@@ -1,6 +1,6 @@
 // Exportar uma partida (semente + configuração + ações + regras usadas) e reproduzi-la passo a passo.
 import { aplicar } from './actions'
-import { regras as regrasPadrao, validarRegras, type Regras } from './config'
+import { validarRegras, type Regras } from './config'
 import { novaPartida } from './setup'
 import type { AcaoRegistrada, ConfigPartida, GameState } from './types'
 
@@ -20,7 +20,7 @@ export interface PartidaExportada {
   extra?: Record<string, unknown>
 }
 
-export function exportarPartida(estado: GameState, r: Regras = regrasPadrao, extra?: Record<string, unknown>): PartidaExportada {
+export function exportarPartida(estado: GameState, r: Regras = estado.regras, extra?: Record<string, unknown>): PartidaExportada {
   if (!estado.config || !Array.isArray(estado.acoes)) {
     throw new Error('Esta partida foi começada antes da exportação existir e não pode ser reproduzida')
   }

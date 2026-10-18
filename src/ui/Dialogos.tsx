@@ -8,7 +8,6 @@ import {
   custoConstrucao,
   obterMapa,
   precoEntreJogadores,
-  regras,
   tiposDeEdificio,
   validarAcao,
   venderACapital,
@@ -50,7 +49,7 @@ export function DialogoConstruir({
 }) {
   const p = estado.jogadores[jogador]!
   const opcoes: { edificio: BuildingType; daReserva: boolean }[] = []
-  for (const t of tiposDeEdificio.filter((x) => construivel(x))) {
+  for (const t of tiposDeEdificio.filter((x) => construivel(x, estado.regras))) {
     opcoes.push({ edificio: t, daReserva: false })
     if (p.reserva.includes(t)) opcoes.push({ edificio: t, daReserva: true })
   }
@@ -82,7 +81,7 @@ export function DialogoConstruir({
 
 /** Entre as recusas do motor em todas as casas, a que explica o problema (recurso ou tile) vale mais que a de lugar. */
 function motivoSemConstrucao(estado: GameState, jogador: number, edificio: BuildingType, daReserva: boolean): string {
-  const motivos = obterMapa().casas.map((casa) => validarAcao(estado, jogador, { tipo: 'construir', edificio, casa, daReserva }))
+  const motivos = obterMapa(estado.regras).casas.map((casa) => validarAcao(estado, jogador, { tipo: 'construir', edificio, casa, daReserva }))
   const geral = motivos.find((m) => m && /^(Recursos insuficientes|Acabaram|Você não tem)/.test(m))
   return geral ?? 'Sem casa válida ao lado dos seus edifícios'
 }
@@ -93,10 +92,10 @@ export function DialogoReservar({ estado, jogador, executar, aoFechar }: { estad
   const [erro, setErro] = useState<string | null>(null)
   return (
     <Dialogo titulo="Reservar um tile" aoFechar={aoFechar}>
-      <p className="dica">Sem custo. O tile sai do estoque e fica na sua reserva (máximo {regras.acoesAuxiliares.reservaMaxima}).</p>
+      <p className="dica">Sem custo. O tile sai do estoque e fica na sua reserva (máximo {estado.regras.acoesAuxiliares.reservaMaxima}).</p>
       <ul className="lista-opcoes">
         {tiposDeEdificio
-          .filter((t) => construivel(t))
+          .filter((t) => construivel(t, estado.regras))
           .map((t) => {
             const motivo = validarAcao(estado, jogador, { tipo: 'reservar', edificio: t })
             return (
@@ -130,11 +129,11 @@ export function DialogoEntregar({ estado, jogador, executar, aoFechar }: { estad
     <Dialogo titulo="Entregar cereal a José" aoFechar={aoFechar}>
       <p>
         José ainda aceita <strong>{estado.demandaCapital}</strong> cereal neste ano. Cada cereal vale{' '}
-        <strong>{regras.contratos.pontosPorCereal}</strong> pontos.
+        <strong>{estado.regras.contratos.pontosPorCereal}</strong> pontos.
       </p>
       <Quantidade valor={q} minimo={1} maximo={maximo} mudar={setQ} />
       <p>
-        Você ganha <strong>{q * regras.contratos.pontosPorCereal}</strong> pontos e fica com {p.cereal - q} cereal.
+        Você ganha <strong>{q * estado.regras.contratos.pontosPorCereal}</strong> pontos e fica com {p.cereal - q} cereal.
       </p>
       {motivo && <p className="erro">{motivo}</p>}
       <button className="botao primario" aria-disabled={motivo !== null} onClick={() => motivo === null && executar({ tipo: 'entregar', quantidade: q })}>
@@ -186,12 +185,12 @@ export function DialogoComerciar({ estado, jogador, executar, aoFechar }: { esta
   let resumo: string
   if (com === 'capital') {
     if (recurso === 'pedra') {
-      resumo = direcao === 'comprar' ? `Custa ${q * regras.pedraNaCapital.precoCompra} ouros (preço fixo).` : 'A Capital não compra pedra.'
+      resumo = direcao === 'comprar' ? `Custa ${q * estado.regras.pedraNaCapital.precoCompra} ouros (preço fixo).` : 'A Capital não compra pedra.'
     } else if (direcao === 'comprar') {
-      const { total, precoFinal } = comprarDaCapital(estado.preco, q)
+      const { total, precoFinal } = comprarDaCapital(estado.preco, q, estado.regras)
       resumo = `Custa ${total} ouros. O preço vai de ${estado.preco} para ${precoFinal}.`
     } else {
-      const { total, precoFinal } = venderACapital(estado.preco, q)
+      const { total, precoFinal } = venderACapital(estado.preco, q, estado.regras)
       resumo = `Rende ${total} ouros. O preço vai de ${estado.preco} para ${precoFinal}.`
     }
   } else {

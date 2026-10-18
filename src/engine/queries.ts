@@ -11,7 +11,7 @@ export { proximaMontagem } from './setup'
 // ---------- montagem ----------
 
 /** Casas onde o jogador da vez pode pôr o próximo edifício da montagem. */
-export function casasValidasMontagem(estado: GameState, r: Regras = regrasPadrao): Coord[] {
+export function casasValidasMontagem(estado: GameState, r: Regras = estado.regras): Coord[] {
   const prox = proximaMontagem(estado, r)
   if (!prox) return []
   return obterMapa(r).casas.filter((c) => motivoCasaInvalidaMontagem(estado, prox.jogador, prox.edificio, c, r) === null)
@@ -19,7 +19,7 @@ export function casasValidasMontagem(estado: GameState, r: Regras = regrasPadrao
 
 // ---------- ano e turno ----------
 
-export function anoMagro(estado: GameState, r: Regras = regrasPadrao): boolean {
+export function anoMagro(estado: GameState, r: Regras = estado.regras): boolean {
   return estado.ano > r.anos.gordos
 }
 
@@ -51,11 +51,11 @@ export function podeNaVarzea(tipo: BuildingType, r: Regras = regrasPadrao): bool
   return (r.edificios[tipo] as { podeNaVarzea?: boolean }).podeNaVarzea === true
 }
 
-export function trabalhadores(estado: GameState, jogador: number, r: Regras = regrasPadrao): number {
+export function trabalhadores(estado: GameState, jogador: number, r: Regras = estado.regras): number {
   return contar(estado, jogador, 'residencia') * r.edificios.residencia.trabalhadores
 }
 
-export function capacidadeCereal(estado: GameState, jogador: number, r: Regras = regrasPadrao): number {
+export function capacidadeCereal(estado: GameState, jogador: number, r: Regras = estado.regras): number {
   let cap = 0
   for (const [, t] of edificiosDe(estado, jogador)) {
     if (t.type === 'prefeitura') cap += r.edificios.prefeitura.capacidadeCereal
@@ -71,12 +71,12 @@ export function pontuacao(p: PlayerState): number {
 
 // ---------- conexões ----------
 
-export function conectadoACapital(estado: GameState, jogador: number, r: Regras = regrasPadrao): boolean {
+export function conectadoACapital(estado: GameState, jogador: number, r: Regras = estado.regras): boolean {
   const mapa = obterMapa(r)
   return edificiosDe(estado, jogador).some(([c]) => (mapa.vizinhos[c] ?? []).some((v) => mapa.terreno[v] === 'capital'))
 }
 
-export function conectadoAJogador(estado: GameState, jogador: number, outro: number, r: Regras = regrasPadrao): boolean {
+export function conectadoAJogador(estado: GameState, jogador: number, outro: number, r: Regras = estado.regras): boolean {
   if (jogador === outro) return false
   const mapa = obterMapa(r)
   return edificiosDe(estado, jogador).some(([c]) => (mapa.vizinhos[c] ?? []).some((v) => estado.tabuleiro[v]?.owner === outro))
@@ -84,7 +84,7 @@ export function conectadoAJogador(estado: GameState, jogador: number, outro: num
 
 // ---------- custos ----------
 
-export function custoConstrucao(estado: GameState, jogador: number, tipo: BuildingType, r: Regras = regrasPadrao): Custo {
+export function custoConstrucao(estado: GameState, jogador: number, tipo: BuildingType, r: Regras = estado.regras): Custo {
   const def = r.edificios[tipo] as { custo?: Custo }
   const base: Custo = { ...(def.custo ?? {}) }
   if (tipo === 'residencia') {
@@ -118,16 +118,16 @@ export function casasValidasConstrucao(
   jogador: number,
   edificio: BuildingType,
   daReserva = false,
-  r: Regras = regrasPadrao,
+  r: Regras = estado.regras,
 ): Coord[] {
   return obterMapa(r).casas.filter((casa) => validarAcao(estado, jogador, { tipo: 'construir', edificio, casa, daReserva }, r) === null)
 }
 
-export function casasValidasDemarcacao(estado: GameState, jogador: number, r: Regras = regrasPadrao): Coord[] {
+export function casasValidasDemarcacao(estado: GameState, jogador: number, r: Regras = estado.regras): Coord[] {
   return obterMapa(r).casas.filter((casa) => validarAcao(estado, jogador, { tipo: 'demarcar', casa }, r) === null)
 }
 
-export function casasValidasEvolucao(estado: GameState, jogador: number, r: Regras = regrasPadrao): Coord[] {
+export function casasValidasEvolucao(estado: GameState, jogador: number, r: Regras = estado.regras): Coord[] {
   return edificiosDe(estado, jogador)
     .map(([c]) => c)
     .filter((casa) => validarAcao(estado, jogador, { tipo: 'evoluir', casa }, r) === null)
@@ -139,7 +139,7 @@ export type TipoAcaoDoAno = 'construir' | 'comerciar' | 'reservar' | 'demarcar' 
  * Para cada botão da barra de ações: null se há ao menos uma jogada válida desse tipo,
  * ou o motivo para mostrar ao jogador.
  */
-export function acoesDisponiveis(estado: GameState, jogador: number, r: Regras = regrasPadrao): Record<TipoAcaoDoAno, string | null> {
+export function acoesDisponiveis(estado: GameState, jogador: number, r: Regras = estado.regras): Record<TipoAcaoDoAno, string | null> {
   const geral = motivoForaDaVez(estado, jogador)
   const p = estado.jogadores[jogador]
   if (geral || !p) {
@@ -192,7 +192,7 @@ export function acoesDisponiveis(estado: GameState, jogador: number, r: Regras =
 }
 
 /** Quantas ações o jogador ainda faz neste ano (0 fora da fase de ações). */
-export function acoesRestantes(estado: GameState, jogador: number, r: Regras = regrasPadrao): number {
+export function acoesRestantes(estado: GameState, jogador: number, r: Regras = estado.regras): number {
   if (estado.fase !== 'acoes') return 0
   const ordem = ordemDoAno(estado)
   const jaAgiuNestaVolta = ordem.indexOf(jogador) < ordem.indexOf(estado.vez)
@@ -211,7 +211,7 @@ export interface PrevisaoAlocacao {
 }
 
 /** "Se a carta for média, você terá X cereais; precisa de Y." Só para orientar o jogador. */
-export function previsaoAlocacao(estado: GameState, jogador: number, casas: Coord[], r: Regras = regrasPadrao): PrevisaoAlocacao {
+export function previsaoAlocacao(estado: GameState, jogador: number, casas: Coord[], r: Regras = estado.regras): PrevisaoAlocacao {
   const p = estado.jogadores[jogador]
   const mapa = obterMapa(r)
   const magro = anoMagro(estado, r)

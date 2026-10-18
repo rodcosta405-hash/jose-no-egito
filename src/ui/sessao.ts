@@ -1,7 +1,7 @@
 // Sessão de jogo na interface: estado do motor + desfazer + pausa do resumo do ano + persistência.
 // Lógica pura (sem React), para poder ser testada no Node.
 import { jogadaDoBot } from '../bots'
-import { aplicar } from '../engine'
+import { aplicar, regras as regrasPadrao } from '../engine'
 import type { Action, GameState, ResumoAno } from '../engine'
 import type { Tempos } from './registro'
 
@@ -145,6 +145,10 @@ export function carregar(armazenamento: Armazenamento, agora = Date.now()): Sess
     if (!bruto) return null
     const s = JSON.parse(bruto) as Partial<Sessao>
     if (!s.estado || !Array.isArray(s.estado.jogadores) || !Array.isArray(s.desfazer)) return null
+    // Partidas salvas antes das regras irem para o estado usam as regras padrão.
+    const comRegras = (e: GameState): GameState => (e.regras ? e : { ...e, regras: regrasPadrao })
+    s.estado = comRegras(s.estado)
+    s.desfazer = s.desfazer.map(comRegras)
     const base = { erroBot: null, velocidade: 'normal', donoDesfazer: null, resumosVistos: s.estado.resumos?.length ?? 0, tempos: {}, ...s } as Sessao
     const c = base.cronometro ?? { ano: base.estado.ano, acumuladoMs: 0, desde: null }
     const cronometro: Cronometro = c.retomar ? { ano: c.ano, acumuladoMs: c.acumuladoMs, desde: agora } : c

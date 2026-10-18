@@ -4,7 +4,7 @@ import { edificiosDe, pontuacao } from './queries'
 import type { Classificado, CriterioDesempate, GameState, PlayerState } from './types'
 
 /** PV impressos no lado visível; Mercado, Campo e Pedreira só contam se tiveram trabalhador no último ano. */
-export function pvImpressos(estado: GameState, jogador: number, r: Regras = regrasPadrao): number {
+export function pvImpressos(estado: GameState, jogador: number, r: Regras = estado.regras): number {
   const p = estado.jogadores[jogador]
   if (!p) return 0
   let total = 0
@@ -50,7 +50,7 @@ export function classificar(jogadores: PlayerState[], r: Regras = regrasPadrao):
 }
 
 /** Soma PV impressos e sobras ao placar, classifica e encerra a partida. */
-export function finalizarPartida(estado: GameState, r: Regras = regrasPadrao): GameState {
+export function finalizarPartida(estado: GameState, r: Regras = estado.regras): GameState {
   const jogadores = estado.jogadores.map((p) => ({
     ...p,
     placar: { ...p.placar, impressos: pvImpressos(estado, p.id, r), sobras: pontosDeSobras(p, r) },

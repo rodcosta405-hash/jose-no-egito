@@ -1,4 +1,4 @@
-import type { BuildingType } from './config'
+import type { BuildingType, Regras } from './config'
 import type { Coord, Margem } from './map'
 import type { EstadoRng } from './rng'
 
@@ -108,6 +108,8 @@ export interface GameState {
   log: LogEntry[]
   /** Configuração usada em novaPartida (para exportar e reproduzir). */
   config: ConfigPartida
+  /** Regras desta partida (padrão: config/regras.json; o modo designer pode trocar). */
+  regras: Regras
   /** Todas as ações aceitas, em ordem: semente + config + ações reproduzem a partida. */
   acoes: AcaoRegistrada[]
 }

@@ -1,4 +1,4 @@
-import { pontuacao, regras } from '../engine'
+import { pontuacao } from '../engine'
 import type { CriterioDesempate, GameState, ResumoAno } from '../engine'
 import { Dialogo } from './Dialogos'
 import { BotoesExportar } from './Exportar'
@@ -7,6 +7,7 @@ import { Marca } from './Paineis'
 import type { Tempos } from './registro'
 
 export function DialogoResumoAno({ estado, resumo, aoContinuar }: { estado: GameState; resumo: ResumoAno; aoContinuar: () => void }) {
+  const regras = estado.regras
   const comecaFome = resumo.ano === regras.anos.gordos
   const ultimo = resumo.ano === regras.anos.total
   return (

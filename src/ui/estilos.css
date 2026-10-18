@@ -662,3 +662,105 @@ tr.vencedor td {
   border-radius: 6px;
   min-height: 2.6em;
 }
+
+/* ---------- modo designer ---------- */
+.designer section {
+  margin: 16px 0;
+}
+.verificacao {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 2px solid;
+}
+.verificacao.ok {
+  border-color: var(--gorda);
+  background: #eef7ee;
+}
+.verificacao.falha {
+  border-color: var(--erro);
+  background: #fbe9e7;
+}
+.grupos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+.grupo {
+  margin: 0;
+  background: var(--papel);
+}
+.grupo.mudado {
+  border: 2px solid var(--primaria);
+}
+.campo-designer {
+  display: grid;
+  grid-template-columns: 1fr 96px;
+  align-items: center;
+  gap: 2px 8px;
+  margin: 4px 0;
+  font-size: 0.92rem;
+}
+.campo-designer input:not([type='checkbox']) {
+  width: 100%;
+  min-height: 40px;
+}
+.campo-designer.mudado span,
+.campo-designer.mudado {
+  font-weight: 700;
+}
+.campo-designer.mudado input {
+  border: 2px solid var(--primaria);
+  background: #eef4fb;
+}
+.campo-designer.invalido input {
+  border: 2px solid var(--erro);
+  background: #fbe9e7;
+}
+.campo-designer .padrao {
+  grid-column: 1 / -1;
+  color: var(--suave);
+  font-weight: 400;
+}
+.json {
+  width: 100%;
+  min-height: 320px;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 0.85rem;
+}
+.mesa-sim {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 8px 0;
+}
+.progresso {
+  position: relative;
+  margin: 10px 0;
+  height: 28px;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  background: var(--papel);
+  overflow: hidden;
+}
+.progresso div {
+  height: 100%;
+  background: #cfe0f3;
+}
+.progresso span {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  font-size: 0.85rem;
+}
+.comparacao td {
+  vertical-align: top;
+}
+.aviso-regras {
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #eef4fb;
+  border: 2px solid var(--primaria);
+}

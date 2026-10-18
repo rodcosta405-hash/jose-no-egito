@@ -21,7 +21,7 @@ import { aplicarAlocacao, motivoAlocacaoInvalida } from './year'
 
 type AcaoDe<T extends Action['tipo']> = Extract<Action, { tipo: T }>
 
-export function aplicar(estado: GameState, jogador: number, acao: Action, r: Regras = regrasPadrao): ResultadoAcao {
+export function aplicar(estado: GameState, jogador: number, acao: Action, r: Regras = estado.regras): ResultadoAcao {
   const res = aplicarSemRegistro(estado, jogador, acao, r)
   if (!res.estado) return res
   return { estado: { ...res.estado, acoes: [...estado.acoes, { jogador, acao }] } }
@@ -39,7 +39,7 @@ function aplicarSemRegistro(estado: GameState, jogador: number, acao: Action, r:
 }
 
 /** null se a ação é válida agora; senão, o motivo. */
-export function validarAcao(estado: GameState, jogador: number, acao: Action, r: Regras = regrasPadrao): string | null {
+export function validarAcao(estado: GameState, jogador: number, acao: Action, r: Regras = estado.regras): string | null {
   if (acao.tipo === 'montar') return estado.fase === 'montagem' ? null : 'A montagem já terminou'
   if (acao.tipo === 'alocar') return motivoAlocacaoInvalida(estado, jogador, acao.casas, r)
   const fora = motivoForaDaVez(estado, jogador)
@@ -197,7 +197,7 @@ export function venderACapital(preco: number, q: number, r: Regras = regrasPadra
 }
 
 /** Preço unitário entre jogadores: cereal ao preço da trilha (sem mover o marcador), pedra a preço fixo. */
-export function precoEntreJogadores(estado: GameState, recurso: 'cereal' | 'pedra', r: Regras = regrasPadrao): number {
+export function precoEntreJogadores(estado: GameState, recurso: 'cereal' | 'pedra', r: Regras = estado.regras): number {
   return recurso === 'cereal' ? estado.preco : r.comercioEntreJogadores.precoPedra
 }
 

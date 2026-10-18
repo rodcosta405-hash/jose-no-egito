@@ -1,12 +1,12 @@
 // Estrutura do ano (docs/REGRAS.md seção 5): início do ano, alocação e resolução.
-import { regras as regrasPadrao, type Regras } from './config'
+import type { Regras } from './config'
 import { obterMapa, type Coord } from './map'
 import { anoMagro, capacidadeCereal, ordemDoAno, pontuacao, precisaTrabalhador, trabalhadores } from './queries'
 import { finalizarPartida } from './scoring'
 import type { GameState, PlayerState, ResumoJogadorAno } from './types'
 
 /** Prepara o ano `ano`: gira o primeiro jogador (a partir do ano 2) e fixa a demanda da Capital. */
-export function iniciarAno(estado: GameState, ano: number, r: Regras = regrasPadrao): GameState {
+export function iniciarAno(estado: GameState, ano: number, r: Regras = estado.regras): GameState {
   let primeiro = estado.primeiro
   if (ano > 1) {
     const i = estado.ordem.indexOf(primeiro)
@@ -35,7 +35,7 @@ export function iniciarAno(estado: GameState, ano: number, r: Regras = regrasPad
 
 // ---------- alocação ----------
 
-export function motivoAlocacaoInvalida(estado: GameState, jogador: number, casas: Coord[], r: Regras = regrasPadrao): string | null {
+export function motivoAlocacaoInvalida(estado: GameState, jogador: number, casas: Coord[], r: Regras = estado.regras): string | null {
   if (estado.fase !== 'alocacao') return 'Agora não é a hora de alocar trabalhadores'
   if (jogador !== estado.vez) return `Não é a sua vez: agora aloca ${estado.jogadores[estado.vez]?.nome}`
   if (new Set(casas).size !== casas.length) return 'No máximo 1 trabalhador por edifício'
@@ -50,7 +50,7 @@ export function motivoAlocacaoInvalida(estado: GameState, jogador: number, casas
 }
 
 /** Aplica a alocação já validada; o último jogador a alocar dispara a resolução do ano. */
-export function aplicarAlocacao(estado: GameState, jogador: number, casas: Coord[], r: Regras = regrasPadrao): GameState {
+export function aplicarAlocacao(estado: GameState, jogador: number, casas: Coord[], r: Regras = estado.regras): GameState {
   const e: GameState = {
     ...estado,
     jogadores: estado.jogadores.map((p) => (p.id === jogador ? { ...p, alocacao: [...casas] } : p)),
@@ -64,7 +64,7 @@ export function aplicarAlocacao(estado: GameState, jogador: number, casas: Coord
 // ---------- resolução ----------
 
 /** Carta, preço, produção, alimentação e armazenagem; depois abre o próximo ano ou encerra a partida. */
-export function resolverAno(estado: GameState, r: Regras = regrasPadrao): GameState {
+export function resolverAno(estado: GameState, r: Regras = estado.regras): GameState {
   const mapa = obterMapa(r)
   const magro = anoMagro(estado, r)
   const carta = estado.baralho[estado.ano - 1] as number

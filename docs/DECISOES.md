@@ -31,3 +31,6 @@ Toda dúvida de regra que surgir durante a implementação entra aqui antes de s
 | 18/10/2026 | Medição do tempo de cada ano | — | Relógio de parede do início do ano (fim da montagem ou "Continuar" do resumo anterior) até o resumo; tempo com a página fechada não conta | Fase 5 | Sim |
 | 18/10/2026 | Exportação reproduzível | Só semente e ações / incluir regras | O JSON guarda semente, configuração, ações e uma cópia do `regras.json` usado; partidas salvas antes da Fase 5 não podem ser exportadas | Fase 5 | Não |
 | 18/10/2026 | Cores dos jogadores | — | Azul, amarelo, verde e magenta (paleta de referência validada para daltonismo em todos os pares); cada cor vem sempre com número, padrão e forma do marcador | Fase 5 | Não |
+| 18/10/2026 | Regras de cada partida | Global / dentro do estado | Cada partida guarda suas regras (`estado.regras`), usadas por padrão pelo motor, bots e interface; partidas salvas antes disso recebem as padrão | Fase 6 | Não |
+| 18/10/2026 | Bots com regras editadas | Re-treinar / mesmos parâmetros | Mesmos parâmetros treinados nas regras originais; a tela avisa que o resultado mostra como esses bots reagem à mudança | Fase 6 | Sim |
+| 18/10/2026 | Mapa no modo designer | Formulário / JSON bruto | Só pelo JSON completo; o validador confere casas e sobreposições e a tela avisa se uma margem sair de 23 casas | Fase 6 | Sim |

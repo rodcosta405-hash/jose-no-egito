@@ -9,7 +9,6 @@ import {
   precisaTrabalhador,
   previsaoAlocacao,
   proximaMontagem,
-  regras,
   trabalhadores,
 } from '../engine'
 import type { Action, BuildingType, Coord, GameState, TipoAcaoDoAno } from '../engine'
@@ -41,7 +40,7 @@ function alocacaoInicial(e: GameState, j: number): Coord[] {
   if (!p) return []
   const validas = p.alocacao.filter((c) => {
     const t = e.tabuleiro[c]
-    return t && t.owner === j && precisaTrabalhador(t.type)
+    return t && t.owner === j && precisaTrabalhador(t.type, e.regras)
   })
   return validas.slice(0, trabalhadores(e, j))
 }
@@ -78,7 +77,7 @@ export function Mesa({ jogo }: { jogo: Jogo }) {
     if (alocando)
       return new Set(
         edificiosDe(e, vez)
-          .filter(([, t]) => precisaTrabalhador(t.type))
+          .filter(([, t]) => precisaTrabalhador(t.type, e.regras))
           .map(([c]) => c),
       )
     if (!modo) return new Set<Coord>()
@@ -110,7 +109,7 @@ export function Mesa({ jogo }: { jogo: Jogo }) {
     if (montando && prox) return void executar({ tipo: 'montar', edificio: prox.edificio, casa })
     if (alocando) {
       const t = e.tabuleiro[casa]
-      if (!t || t.owner !== vez || !precisaTrabalhador(t.type)) return setMensagem('Toque nos seus Campos, Pedreiras e Mercados')
+      if (!t || t.owner !== vez || !precisaTrabalhador(t.type, e.regras)) return setMensagem('Toque nos seus Campos, Pedreiras e Mercados')
       if (sel.includes(casa)) return setSelecao(sel.filter((c) => c !== casa))
       const w = trabalhadores(e, vez)
       if (sel.length >= w) return setMensagem(`Você tem só ${w} trabalhadores. Tire um de outro edifício primeiro.`)
@@ -149,7 +148,7 @@ export function Mesa({ jogo }: { jogo: Jogo }) {
         : `${pVez.nome}, coloque: ${nome} (ao lado dos seus edifícios${prox.edificio === 'campo' ? '; pode ser na várzea' : ''}).`
   } else if (alocando) guia = `${pVez.nome}, aloque seus trabalhadores: toque nos seus Campos, Pedreiras e Mercados.`
   else if (modo?.tipo === 'construir') guia = `Toque numa casa destacada para construir ${nomeEdificio(modo.edificio)}.`
-  else if (modo?.tipo === 'demarcar') guia = `Toque numa casa destacada para demarcar (custa ${regras.acoesAuxiliares.custoDemarcacao} ouro).`
+  else if (modo?.tipo === 'demarcar') guia = `Toque numa casa destacada para demarcar (custa ${e.regras.acoesAuxiliares.custoDemarcacao} ouro).`
   else if (modo?.tipo === 'evoluir') guia = 'Toque num edifício seu destacado para evoluir.'
   else guia = `Vez de ${pVez.nome}: escolha uma ação.`
 

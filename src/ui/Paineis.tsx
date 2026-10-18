@@ -5,7 +5,6 @@ import {
   capacidadeCereal,
   conectadoACapital,
   pontuacao,
-  regras,
   trabalhadores,
 } from '../engine'
 import type { GameState, Placar } from '../engine'
@@ -21,6 +20,7 @@ export function Marca({ jogador }: { jogador: number }) {
 }
 
 export function Cabecalho({ estado }: { estado: GameState }) {
+  const regras = estado.regras
   const magro = estado.ano > 0 && anoMagro(estado)
   const { minimo, maximo, ancoraGordos, ancoraMagros } = regras.precoCereal
   const cartasFase = magro ? regras.cartas.magras : regras.cartas.gordas
