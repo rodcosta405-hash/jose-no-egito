@@ -1,0 +1,90 @@
+{
+  "versao": "dossie-v2-mapa-s",
+  "anos": { "total": 14, "gordos": 7 },
+  "acoesPorAno": 2,
+  "mapa": {
+    "colunas": 8,
+    "linhas": 8,
+    "notacao": "xadrez: colunas A-H da esquerda para a direita, linha 1 embaixo",
+    "capital": ["D4", "E4", "D5", "E5"],
+    "varzea": ["C1", "C2", "D2", "E2", "F2", "F3", "F4", "F8", "F7", "E7", "D7", "C7", "C6", "C5"],
+    "rochas": ["A1", "B1", "A2", "H1", "G1", "H2", "A8", "A7", "B8", "H8", "G8", "H7"],
+    "margens": {
+      "oeste": { "sementeFloodFill": "A8" },
+      "leste": { "sementeFloodFill": "H1" }
+    },
+    "jogadoresPorMargem": 2
+  },
+  "inicial": {
+    "ouro": 3,
+    "pedra": 2,
+    "cereal": 2,
+    "edificios": ["prefeitura", "residencia", "mercado", "campo", "pedreira"]
+  },
+  "edificios": {
+    "prefeitura": { "nome": "Prefeitura", "capacidadeCereal": 5, "pv": 0, "construivel": false },
+    "residencia": {
+      "nome": "Residência",
+      "custo": { "ouro": 2, "pedra": 2 },
+      "escaladaPorResidenciaExtra": { "ouro": 2, "pedra": 1 },
+      "trabalhadores": 2,
+      "precisaTrabalhador": false,
+      "pv": 1,
+      "verso": { "nome": "Vila Nobre", "custo": { "ouro": 3, "pedra": 3 }, "pv": 4 }
+    },
+    "mercado": {
+      "nome": "Mercado",
+      "custo": { "ouro": 3, "pedra": 1 },
+      "precisaTrabalhador": true,
+      "produzOuro": 4,
+      "pv": 2,
+      "pvSoSeOperando": true,
+      "verso": { "nome": "Grande Mercado", "custo": { "ouro": 2, "pedra": 2 }, "pv": 4, "bonusOuro": 1 }
+    },
+    "campo": {
+      "nome": "Campo",
+      "custo": { "ouro": 2 },
+      "precisaTrabalhador": true,
+      "produzCereal": "valorDaCarta",
+      "bonusVarzeaAnosGordos": 1,
+      "bonusVarzeaAnosMagros": 0,
+      "podeNaVarzea": true,
+      "pv": 1,
+      "pvSoSeOperando": true,
+      "verso": { "nome": "Campo Irrigado", "custo": { "ouro": 1, "pedra": 2 }, "pv": 3 }
+    },
+    "pedreira": {
+      "nome": "Pedreira",
+      "custo": { "ouro": 2 },
+      "precisaTrabalhador": true,
+      "produzPedra": 2,
+      "bonusRocha": 1,
+      "pv": 1,
+      "pvSoSeOperando": true,
+      "verso": { "nome": "Pedreira Profunda", "custo": { "ouro": 2, "pedra": 1 }, "pv": 3, "bonusPedra": 1 }
+    },
+    "armazem": {
+      "nome": "Armazém",
+      "custo": { "ouro": 2, "pedra": 2 },
+      "precisaTrabalhador": false,
+      "capacidadeCereal": 5,
+      "pv": 1,
+      "verso": { "nome": "Celeiro Real", "custo": { "ouro": 2, "pedra": 3 }, "pv": 3, "bonusCapacidade": 3 }
+    }
+  },
+  "estoqueDeTiles": { "residencia": 16, "mercado": 12, "campo": 20, "pedreira": 12, "armazem": 24 },
+  "tilesVisiveisPorTipo": 2,
+  "cartas": {
+    "gordas": [3, 3, 3, 4, 4, 4, 4, 5, 5, 5],
+    "magras": [0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
+    "sorteadasPorFase": 7
+  },
+  "precoCereal": { "minimo": 1, "maximo": 10, "inicio": 4, "ancoraGordos": 2, "ancoraMagros": 7 },
+  "pedraNaCapital": { "precoCompra": 2, "capitalCompraPedra": false },
+  "comercioEntreJogadores": { "precoCereal": "precoAtualDaTrilha", "precoPedra": 2, "moveTrilha": false },
+  "populacao": { "consumoPorTrabalhador": 1, "pontosAlimentado": 1, "pontosSemComida": -2 },
+  "contratos": { "pontosPorCereal": 3, "demandaPorAnoMagro": 4 },
+  "acoesAuxiliares": { "reservaMaxima": 2, "demarcacaoMaxima": 2, "custoDemarcacao": 1 },
+  "fimDeJogo": { "ouroPorPonto": 4, "cerealPorPonto": 2, "pedraPorPonto": 4 },
+  "desempate": ["trabalhadoresAlimentadosNoAno14", "cerealGuardado"]
+}

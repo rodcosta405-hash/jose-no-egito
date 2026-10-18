@@ -1,0 +1,10 @@
+{
+  "//": "Confere que o motor e os bots não usam React nem APIs do navegador (sem lib DOM).",
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2022"],
+    "types": [],
+    "jsx": "preserve"
+  },
+  "include": ["src/engine", "src/bots"]
+}

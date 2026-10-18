@@ -1,0 +1,29 @@
+{
+  "observacao": "Estratégias encontradas por busca evolutiva no simulador Python (regras v8). Treinadas no mapa de dois rios e testadas no mapa em S, onde mantiveram o equilíbrio. Os nomes dos parâmetros seguem docs/BOTS.md.",
+  "estrategias": [
+    {
+      "id": "populoso",
+      "nome": "Populoso",
+      "descricao": "Cresce até 3 Residências cedo, estoca para a fome e pontua com a população.",
+      "params": { "res_t": 6, "mk_t": 1, "cp_t": 7, "pd_t": 5, "stop_res": 4, "upg_from": 3, "lean_buy": 8, "sell_min": 8, "store_from": 3, "store": 2.21, "keep": 0.84, "capital_w": 0.0, "keep_c": 0.94, "order": ["res", "cp", "mk", "upg", "pd"], "fat_fill": false, "mk_first": true, "use_c": true }
+    },
+    {
+      "id": "entregador",
+      "nome": "Entregador",
+      "descricao": "Fica em 2 Residências, estoca quase o dobro do necessário e pontua com os contratos de José.",
+      "params": { "res_t": 4, "mk_t": 6, "cp_t": 5, "pd_t": 1, "stop_res": 10, "upg_from": 3, "lean_buy": 7, "sell_min": 8, "store_from": 2, "store": 1.84, "keep": 1.41, "capital_w": 0.0, "keep_c": 0.45, "order": ["upg", "cp", "mk", "pd", "res"], "fat_fill": false, "mk_first": true, "use_c": true }
+    },
+    {
+      "id": "entregador_cauteloso",
+      "nome": "Entregador cauteloso",
+      "descricao": "Variante do entregador que evolui mais tarde e prioriza a Capital na escolha de posição.",
+      "params": { "res_t": 6, "mk_t": 6, "cp_t": 7, "pd_t": 3, "stop_res": 5, "upg_from": 6, "lean_buy": 8, "sell_min": 7, "store_from": 2, "store": 1.79, "keep": 0.62, "capital_w": 0.96, "keep_c": 0.68, "order": ["upg", "cp", "pd", "res", "mk"], "fat_fill": false, "mk_first": true, "use_c": true }
+    }
+  ],
+  "referenciaDeResultados": {
+    "descricao": "Valores medidos no Python, mapa em S, 1200 partidas, para conferir o porte em TypeScript (tolerância sugerida: ±5 pontos de média, ±6 pontos percentuais de vitória).",
+    "mesa_4_populosos": { "pontosMedios": 134, "vitoriasPorMargem": { "oeste": 0.24, "leste": 0.26 } },
+    "mesa_4_entregadores": { "pontosMedios": 128, "vitoriasPorMargem": { "oeste": 0.25, "leste": 0.25 } },
+    "mesa_2_populosos_2_entregadores": { "pontosMedios": { "populoso": 137, "entregador": 134 }, "vitorias": { "populoso": 0.30, "entregador": 0.20 } }
+  }
+}
