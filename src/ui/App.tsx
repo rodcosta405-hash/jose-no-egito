@@ -1,10 +1,10 @@
-import { regras } from '../engine'
+import { Mesa } from './Mesa'
+import { NovaPartida } from './NovaPartida'
+import { temPartidaSalva, useJogo } from './useJogo'
+import './estilos.css'
 
 export function App() {
-  return (
-    <main style={{ fontFamily: 'system-ui, sans-serif', padding: 16, maxWidth: 720, margin: '0 auto' }}>
-      <h1>José no Egito</h1>
-      <p>Protótipo para playtest. Regras carregadas: {regras.versao}.</p>
-    </main>
-  )
+  const jogo = useJogo()
+  if (!jogo.sessao) return <NovaPartida aoComecar={(e) => jogo.comecar(e)} salvaExiste={temPartidaSalva()} aoContinuar={jogo.continuarSalva} />
+  return <Mesa jogo={jogo} />
 }

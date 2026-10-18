@@ -191,6 +191,58 @@ export function acoesDisponiveis(estado: GameState, jogador: number, r: Regras =
   }
 }
 
+/** Quantas ações o jogador ainda faz neste ano (0 fora da fase de ações). */
+export function acoesRestantes(estado: GameState, jogador: number, r: Regras = regrasPadrao): number {
+  if (estado.fase !== 'acoes') return 0
+  const ordem = ordemDoAno(estado)
+  const jaAgiuNestaVolta = ordem.indexOf(jogador) < ordem.indexOf(estado.vez)
+  return r.acoesPorAno - estado.volta + (jaAgiuNestaVolta ? 0 : 1)
+}
+
+export interface PrevisaoAlocacao {
+  /** Média das cartas da fase atual. */
+  cartaMedia: number
+  cerealPrevisto: number
+  /** Cereal para alimentar todos os trabalhadores. */
+  necessidade: number
+  capacidade: number
+  ouroPrevisto: number
+  pedraPrevista: number
+}
+
+/** "Se a carta for média, você terá X cereais; precisa de Y." Só para orientar o jogador. */
+export function previsaoAlocacao(estado: GameState, jogador: number, casas: Coord[], r: Regras = regrasPadrao): PrevisaoAlocacao {
+  const p = estado.jogadores[jogador]
+  const mapa = obterMapa(r)
+  const magro = anoMagro(estado, r)
+  const cartas = magro ? r.cartas.magras : r.cartas.gordas
+  const cartaMedia = cartas.reduce((a, b) => a + b, 0) / cartas.length
+  let cereal = 0
+  let ouro = 0
+  let pedra = 0
+  for (const c of casas) {
+    const t = estado.tabuleiro[c]
+    if (!t || t.owner !== jogador) continue
+    if (t.type === 'campo') {
+      const bonus = magro ? r.edificios.campo.bonusVarzeaAnosMagros : r.edificios.campo.bonusVarzeaAnosGordos
+      cereal += cartaMedia + (mapa.terreno[c] === 'varzea' ? bonus : 0)
+    } else if (t.type === 'mercado') {
+      ouro += r.edificios.mercado.produzOuro + (t.evoluido ? r.edificios.mercado.verso.bonusOuro : 0)
+    } else if (t.type === 'pedreira') {
+      const d = r.edificios.pedreira
+      pedra += d.produzPedra + (mapa.terreno[c] === 'rocha' ? d.bonusRocha : 0) + (t.evoluido ? d.verso.bonusPedra : 0)
+    }
+  }
+  return {
+    cartaMedia,
+    cerealPrevisto: (p?.cereal ?? 0) + cereal,
+    necessidade: trabalhadores(estado, jogador, r) * r.populacao.consumoPorTrabalhador,
+    capacidade: capacidadeCereal(estado, jogador, r),
+    ouroPrevisto: (p?.ouro ?? 0) + ouro,
+    pedraPrevista: (p?.pedra ?? 0) + pedra,
+  }
+}
+
 /** Motivo comum a todas as ações do ano: fase errada ou vez de outro jogador. */
 export function motivoForaDaVez(estado: GameState, jogador: number): string | null {
   if (estado.fase === 'fim') return 'A partida terminou'

@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
   acoesDisponiveis,
+  acoesRestantes,
+  previsaoAlocacao,
   aplicar,
   casasValidasConstrucao,
   casasValidasMontagem,
@@ -141,6 +143,22 @@ describe('resolução do ano', () => {
     const e8 = resolverAno(naAlocacao({ ano: 7 }))
     expect(e8.ano).toBe(8)
     expect(e8.demandaCapital).toBe(regras.contratos.demandaPorAnoMagro)
+  })
+})
+
+describe('consultas para a interface', () => {
+  it('previsão da alocação com carta média', () => {
+    const e = cenario({ edificios0: { C4: 'prefeitura', B4: 'residencia', C5: 'campo', C3: 'mercado' }, j0: { cereal: 1 } })
+    // Média das gordas = 4; C5 é várzea (+1) → 1 + 5 = 6 cereais; precisa de 2.
+    expect(previsaoAlocacao(e, 0, ['C5', 'C3'])).toMatchObject({ cartaMedia: 4, cerealPrevisto: 6, necessidade: 2, ouroPrevisto: 3 + 4 })
+  })
+
+  it('ações restantes no ano', () => {
+    const e = cenario()
+    expect(acoesRestantes(e, 0)).toBe(2)
+    const depois = ok(e, 0, { tipo: 'passar' })
+    expect(acoesRestantes(depois, 0)).toBe(1)
+    expect(acoesRestantes(depois, 1)).toBe(2)
   })
 })
 

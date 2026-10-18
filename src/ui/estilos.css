@@ -1,0 +1,576 @@
+:root {
+  --fundo: #faf6ec;
+  --papel: #ffffff;
+  --texto: #222;
+  --suave: #5c5546;
+  --borda: #d8cdb2;
+  --primaria: #1f5f99;
+  --gorda: #2f7d32;
+  --magra: #a33a1f;
+  --erro: #a3201a;
+  --destaque: #1a7a40;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 12px 16px 40px;
+}
+
+h1 {
+  margin: 8px 0;
+  font-size: 1.6rem;
+}
+h2 {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+}
+
+/* ---------- botões ---------- */
+.botao {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px 14px;
+  border: 1px solid #8f8264;
+  border-radius: 8px;
+  background: var(--papel);
+  color: var(--texto);
+  font: inherit;
+  cursor: pointer;
+}
+.botao:hover {
+  background: #f1ead6;
+}
+.botao:focus-visible {
+  outline: 3px solid var(--primaria);
+  outline-offset: 2px;
+}
+.botao.primario {
+  background: var(--primaria);
+  border-color: var(--primaria);
+  color: #fff;
+  font-weight: 600;
+}
+.botao.primario:hover {
+  background: #184d7d;
+}
+.botao.secundario {
+  background: transparent;
+}
+.botao.largo {
+  width: 100%;
+  margin-top: 8px;
+}
+.botao[aria-disabled='true'] {
+  opacity: 0.55;
+  border-style: dashed;
+}
+.botao.marcado {
+  background: #dbe9f6;
+  border: 2px solid var(--primaria);
+  font-weight: 600;
+}
+.botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+select,
+input {
+  min-height: 44px;
+  padding: 6px 8px;
+  border: 1px solid #8f8264;
+  border-radius: 6px;
+  font: inherit;
+  background: var(--papel);
+  max-width: 100%;
+}
+
+.erro {
+  color: var(--erro);
+  font-weight: 600;
+}
+.dica {
+  color: var(--suave);
+  font-size: 0.9rem;
+}
+
+/* ---------- marca do jogador (cor + padrão + número) ---------- */
+.marca {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 4px;
+  border: 1.5px solid #222;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85em;
+  vertical-align: middle;
+  text-shadow: 0 0 2px #000;
+}
+.marca-listras {
+  background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.45) 0 3px, transparent 3px 7px) !important;
+}
+.marca-pontos {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.55) 1.5px, transparent 1.6px) !important;
+  background-size: 6px 6px !important;
+}
+.marca-xadrez {
+  background-image: conic-gradient(rgba(255, 255, 255, 0.35) 25%, transparent 0 50%, rgba(255, 255, 255, 0.35) 0 75%, transparent 0) !important;
+  background-size: 8px 8px !important;
+}
+
+/* ---------- nova partida ---------- */
+.nova-partida,
+.regras,
+.fim {
+  max-width: 720px;
+  margin: 0 auto;
+}
+.subtitulo {
+  color: var(--suave);
+  margin-top: 0;
+}
+.campo {
+  display: block;
+  margin: 12px 0;
+}
+fieldset {
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  margin: 12px 0;
+  padding: 8px 12px;
+}
+fieldset label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+}
+.vagas {
+  padding-left: 1.5em;
+}
+.vagas li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0;
+}
+.vagas input {
+  flex: 1 1 140px;
+}
+
+/* ---------- mesa ---------- */
+.cabecalho {
+  border: 2px solid var(--borda);
+  border-radius: 10px;
+  padding: 8px 12px;
+  background: var(--papel);
+}
+.cabecalho.fase-gorda {
+  border-color: var(--gorda);
+  background: #eef7ee;
+}
+.cabecalho.fase-magra {
+  border-color: var(--magra);
+  background: #fbefe9;
+}
+.cab-linha {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+  margin: 4px 0;
+}
+.cab-ano {
+  font-size: 1.15rem;
+}
+.fase-gorda .cab-fase {
+  color: var(--gorda);
+  font-weight: 700;
+}
+.fase-magra .cab-fase {
+  color: var(--magra);
+  font-weight: 700;
+}
+.cab-rotulo {
+  font-size: 0.9rem;
+  color: var(--suave);
+}
+.cab-cartas {
+  font-size: 0.9rem;
+  color: var(--suave);
+}
+.trilha {
+  display: flex;
+  gap: 2px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.trilha li {
+  position: relative;
+  width: 28px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--borda);
+  border-radius: 4px;
+  background: #fff;
+  font-size: 0.85rem;
+}
+.trilha li small {
+  position: absolute;
+  bottom: -2px;
+  right: 1px;
+  font-size: 0.6rem;
+  color: var(--suave);
+}
+.trilha li.atual {
+  background: #222;
+  color: #fff;
+  font-weight: 700;
+}
+.trilha li.atual small {
+  color: #ddd;
+}
+
+.barra-vez {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+  padding: 6px 10px;
+  border-left: 8px solid;
+  background: var(--papel);
+  border-radius: 6px;
+}
+.barra-vez .vez {
+  font-size: 1.1rem;
+}
+.controles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.corpo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+@media (min-width: 900px) {
+  .corpo {
+    grid-template-columns: minmax(0, 3fr) minmax(300px, 2fr);
+  }
+}
+
+.guia {
+  margin: 4px 0 8px;
+  font-weight: 600;
+}
+.mensagem {
+  margin: 8px 0;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #fff3cd;
+  border: 1px solid #e0b84a;
+}
+
+.tabuleiro {
+  display: block;
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+  margin: 0 auto;
+  user-select: none;
+  touch-action: manipulation;
+}
+.t-coord {
+  font-size: 11px;
+  fill: var(--suave);
+}
+.t-capital {
+  font-size: 15px;
+  font-weight: 700;
+  fill: #5a4300;
+}
+.t-capital-sub {
+  font-size: 11px;
+  fill: #5a4300;
+}
+.t-sigla {
+  font-size: 13px;
+  font-weight: 700;
+  fill: #111;
+}
+.t-num {
+  font-size: 12px;
+  font-weight: 700;
+  fill: #222;
+}
+.t-num-claro {
+  font-size: 11px;
+  font-weight: 700;
+  fill: #fff;
+  paint-order: stroke;
+  stroke: #000;
+  stroke-width: 2px;
+}
+.t-estrela {
+  font-size: 14px;
+  fill: #f5c518;
+  stroke: #5a4300;
+  stroke-width: 0.6px;
+}
+.casa-ativa {
+  animation: pulsar 1.6s ease-in-out infinite;
+}
+@keyframes pulsar {
+  50% {
+    fill-opacity: 0.38;
+  }
+}
+
+.barra-acoes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+.botao.acao {
+  font-weight: 600;
+}
+
+.alocacao {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: var(--papel);
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+}
+.contador {
+  font-size: 1.1rem;
+  margin: 0 0 4px;
+}
+
+.painel,
+.outros,
+.historico {
+  background: var(--papel);
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+}
+.painel h2 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.pontos {
+  margin-left: auto;
+  font-size: 1rem;
+}
+.recursos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 12px;
+  font-size: 1rem;
+}
+.linha-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  margin: 6px 0;
+  font-size: 0.88rem;
+  color: var(--suave);
+}
+.placar {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 4px;
+  margin: 8px 0 0;
+  text-align: center;
+}
+.placar dt {
+  font-size: 0.7rem;
+  color: var(--suave);
+}
+.placar dd {
+  margin: 0;
+  font-weight: 700;
+}
+.outros ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.outros li {
+  padding: 6px 0;
+  border-top: 1px solid #eee4cc;
+}
+.outros li:first-child {
+  border-top: 0;
+}
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.log {
+  max-height: 260px;
+  overflow-y: auto;
+  padding-left: 0;
+  list-style: none;
+  font-size: 0.9rem;
+}
+.log li {
+  padding: 3px 0;
+  border-bottom: 1px dotted #e6dcc2;
+}
+.log .vazio {
+  color: var(--suave);
+}
+
+/* ---------- diálogos ---------- */
+.fundo-dialogo {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 25, 10, 0.45);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px 12px;
+  overflow-y: auto;
+  z-index: 10;
+}
+.dialogo {
+  width: 100%;
+  max-width: 640px;
+  background: var(--papel);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+.dialogo > .botao {
+  margin-top: 8px;
+  margin-right: 8px;
+}
+.lista-opcoes {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+}
+.botao.opcao {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 2px;
+}
+.motivo {
+  color: var(--erro);
+  font-size: 0.82rem;
+  font-style: normal;
+}
+.quantidade {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin: 8px 0;
+}
+.quantidade input {
+  width: 80px;
+  text-align: center;
+}
+.carta-revelada {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 24px;
+  border: 3px solid #8a6d1d;
+  border-radius: 10px;
+  background: #fbf2d0;
+}
+.carta-revelada strong {
+  font-size: 2.6rem;
+  line-height: 1;
+}
+.carta-revelada small {
+  color: var(--suave);
+}
+.aviso-fome {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fbe3d9;
+  border: 2px solid var(--magra);
+  font-weight: 600;
+}
+.tabela-rolavel {
+  overflow-x: auto;
+  margin: 8px 0;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.9rem;
+}
+th,
+td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #e6dcc2;
+  text-align: left;
+  white-space: nowrap;
+}
+td.ruim {
+  color: var(--erro);
+  font-weight: 700;
+}
+tr.vencedor td {
+  background: #fdf4cf;
+  font-weight: 600;
+}
+.nota {
+  color: var(--suave);
+  font-weight: 400;
+}
+
+@media (max-width: 480px) {
+  #root {
+    padding: 8px 16px 32px;
+  }
+  .placar {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .trilha li {
+    width: 24px;
+  }
+}
